@@ -38,7 +38,7 @@ namespace LetsEncrypt.ACME.Simple
 
         public override void Renew(Target target)
         {
-            Console.WriteLine(" WARNING: Unable to renew.");
+            Auto(target);
         }
 
         public override void PrintMenu()
