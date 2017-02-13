@@ -275,6 +275,7 @@ at " + _sourceFilePath);
                 Log.Information("Committing binding changes to IIS");
                 iisManager.CommitChanges();
             }
+            RunScript(false);
         }
 
         //This doesn't take any certificate info to enable centralized ssl
@@ -361,6 +362,7 @@ at " + _sourceFilePath);
                 Log.Error("Error Setting Binding {@ex}", ex);
                 throw new InvalidProgramException(ex.Message.ToString());
             }
+            RunScript(true);
         }
 
         public Version GetIisVersion()
