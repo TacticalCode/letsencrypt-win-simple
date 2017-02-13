@@ -109,5 +109,38 @@ namespace LetsEncrypt.ACME.Simple
         public virtual void DeleteAuthorization(string answerPath, string token, string webRootPath, string filePath)
         {
         }
+        
+        private static void RunScript(bool isCentralSSL)
+        {
+            if (!string.IsNullOrWhiteSpace(Program.Options.Script) &&
+                !string.IsNullOrWhiteSpace(Program.Options.ScriptParameters))
+            {
+                if (isCentralSSL)
+                {
+                    var parameters = string.Format(Program.Options.ScriptParameters, target.Host,
+                        Properties.Settings.Default.PFXPassword, Program.Options.CentralSslStore);
+                }
+                else
+                {
+                    var parameters = string.Format(Program.Options.ScriptParameters, target.Host,
+                        Properties.Settings.Default.PFXPassword,
+                        pfxFilename, store.Name, certificate.FriendlyName, certificate.Thumbprint);
+                }
+                Console.WriteLine($" Running {Program.Options.Script} with {parameters}");
+                Log.Information("Running {Script} with {parameters}", Program.Options.Script, parameters);
+                Process.Start(Program.Options.Script, parameters);
+            }
+            else if (!string.IsNullOrWhiteSpace(Program.Options.Script))
+            {
+                Console.WriteLine($" Running {Program.Options.Script}");
+                Log.Information("Running {Script}", Program.Options.Script);
+                Process.Start(Program.Options.Script);
+            }
+            else
+            {
+                Console.WriteLine(" INFO: No script options set, skipping script execution.");
+            }
+        }
+            
     }
 }
